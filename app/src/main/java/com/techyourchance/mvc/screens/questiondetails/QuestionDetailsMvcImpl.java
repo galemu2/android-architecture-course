@@ -49,7 +49,7 @@ public class QuestionDetailsMvcImpl extends BaseViewMvc implements QuestionDetai
     }
 
     @Override
-    public void fetchingSuccess(QuestionDetails questionDetails) {
+    public void fetchingSuccess( ) {
         try {
             Thread.sleep(350);
         } catch (InterruptedException e) {
@@ -59,7 +59,10 @@ public class QuestionDetailsMvcImpl extends BaseViewMvc implements QuestionDetai
         hideProgressbar();
         hideError();
         showDetails();
+    }
 
+    @Override
+    public void bindQuestionDetails(QuestionDetails questionDetails) {
         setDetailsTitle(questionDetails.getTitle());
         setDetailsBody(questionDetails.getBody());
     }

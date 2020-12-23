@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.techyourchance.mvc.networking.QuestionDetailsResponseSchema;
 import com.techyourchance.mvc.networking.QuestionSchema;
@@ -27,14 +28,13 @@ public class QuestionDetailsActivity extends BaseActivity {
     }
 
     private StackoverflowApi mStackoverflowApi;
-    private String questionId;
     private QuestionDetailsMvc mQuestionDetailsMvc;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mStackoverflowApi = getCompositionRoot().getStackoverflowApi();
-        questionId = getIntent().getStringExtra(EXTRA_QUESTION_ID);
+
         mQuestionDetailsMvc = getCompositionRoot().getViewMvcFactory().getQuestionDetailsMvc(null);
         setContentView(mQuestionDetailsMvc.getRootView());
     }
@@ -47,27 +47,37 @@ public class QuestionDetailsActivity extends BaseActivity {
     }
 
     private void fetchQuestionDetail() {
+        String questionId = getIntent().getStringExtra(EXTRA_QUESTION_ID);
         mStackoverflowApi.fetchQuestionDetails(questionId)
                 .enqueue(new Callback<QuestionDetailsResponseSchema>() {
                     @Override
                     public void onResponse(Call<QuestionDetailsResponseSchema> call, Response<QuestionDetailsResponseSchema> response) {
                         if (response.isSuccessful() && response.body() != null) {
 
-                            QuestionSchema schema = response.body().getQuestion();
 
-                            QuestionDetails mQuestionDetails = new QuestionDetails(schema.getId(), schema.getTitle(), schema.getBody());
-                            mQuestionDetailsMvc.fetchingSuccess(mQuestionDetails);
+                            bindQuestionDetails(response.body().getQuestion());
 
                         } else {
-                            mQuestionDetailsMvc.fetchingFail();
+                            networkFail();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<QuestionDetailsResponseSchema> call, Throwable t) {
-                        mQuestionDetailsMvc.fetchingFail();
+                        networkFail();
                     }
                 });
+    }
+
+    private void bindQuestionDetails(QuestionSchema schema) {
+        mQuestionDetailsMvc.fetchingSuccess();
+        QuestionDetails mQuestionDetails = new QuestionDetails(schema.getId(), schema.getTitle(), schema.getBody());
+        mQuestionDetailsMvc.bindQuestionDetails(mQuestionDetails);
+    }
+
+    private void networkFail() {
+        mQuestionDetailsMvc.fetchingFail();
+        Toast.makeText(this, "network call fail", Toast.LENGTH_SHORT).show();
     }
 
 

@@ -8,7 +8,9 @@ public interface QuestionDetailsMvc extends ViewMvc {
 
     void fetchStarting();
 
-    void fetchingSuccess(QuestionDetails questionDetails);
+    void fetchingSuccess();
 
     void fetchingFail();
+
+    void bindQuestionDetails(QuestionDetails questionDetails);
 }
