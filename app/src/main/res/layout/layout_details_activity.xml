@@ -9,21 +9,25 @@
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_margin="16dp"
+        android:layout_weight="1"
         android:padding="16dp" />
 
     <LinearLayout
         android:id="@+id/details_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="top"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             tools:text="Title Here" />
 
@@ -35,16 +39,16 @@
             <TextView
                 android:id="@+id/text_body"
                 android:layout_width="match_parent"
-                tools:text="body text here"
                 android:layout_height="wrap_content"
-                />
+                android:padding="8dp"
+                tools:text="body text here" />
         </ScrollView>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/image_error"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srcCompat="@drawable/ic_error_1349562"
-        />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/ic_error_1349562" />
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.techyourchance.mvc.R;
+import com.techyourchance.mvc.questions.QuestionDetails;
 import com.techyourchance.mvc.screens.common.BaseViewMvc;
 
 public class QuestionDetailsMvcImpl extends BaseViewMvc implements QuestionDetailsMvc {
@@ -30,60 +31,81 @@ public class QuestionDetailsMvcImpl extends BaseViewMvc implements QuestionDetai
         mImageView = findViewById(R.id.image_error);
     }
 
-    @Override
-    public void setDetailsTitle(String title) {
+    private void setDetailsTitle(String title) {
         textTitle.setText(title);
     }
 
 
-    @Override
-    public void setDetailsBody(String body) {
+    private void setDetailsBody(String body) {
         textBody.setText(body);
     }
 
     @Override
-    public void fetchingInProgress() {
-        if (mProgressBar.getVisibility() == View.INVISIBLE) {
+    public void fetchStarting() {
+        hideDetails();
+        hideError();
+        showProgressbar();
+
+    }
+
+    @Override
+    public void fetchingSuccess(QuestionDetails questionDetails) {
+        try {
+            Thread.sleep(350);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        hideProgressbar();
+        hideError();
+        showDetails();
+
+        setDetailsTitle(questionDetails.getTitle());
+        setDetailsBody(questionDetails.getBody());
+    }
+
+    @Override
+    public void fetchingFail() {
+        hideProgressbar();
+        hideDetails();
+        showError();
+    }
+
+    public void showProgressbar() {
+        if (mProgressBar.getVisibility() == View.GONE) {
             mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
-    @Override
-    public void fetchingDone() {
+    public void hideProgressbar() {
         if (mProgressBar.getVisibility() == View.VISIBLE) {
-            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 
-    @Override
     public void showDetails() {
-        if (layoutContainer.getVisibility() == View.INVISIBLE) {
+        if (layoutContainer.getVisibility() == View.GONE) {
             layoutContainer.setVisibility(View.VISIBLE);
         }
     }
 
-    @Override
     public void hideDetails() {
         if (layoutContainer.getVisibility() == View.VISIBLE) {
-            layoutContainer.setVisibility(View.INVISIBLE);
+            layoutContainer.setVisibility(View.GONE);
         }
 
     }
 
-    @Override
     public void showError() {
-        if (mImageView.getVisibility() == View.INVISIBLE) {
+        if (mImageView.getVisibility() == View.GONE) {
             mImageView.setVisibility(View.VISIBLE);
         }
 
     }
 
-    @Override
-    public void hideErrror() {
+    public void hideError() {
         if (mImageView.getVisibility() == View.VISIBLE) {
-            mImageView.setVisibility(View.INVISIBLE);
+            mImageView.setVisibility(View.GONE);
         }
     }
-
-
 }

@@ -1,23 +1,14 @@
 package com.techyourchance.mvc.screens.questiondetails;
 
+import com.techyourchance.mvc.questions.QuestionDetails;
 import com.techyourchance.mvc.screens.common.ViewMvc;
 
 public interface QuestionDetailsMvc extends ViewMvc {
 
-    void setDetailsTitle(String title);
 
-    void setDetailsBody(String body);
+    void fetchStarting();
 
-    void fetchingInProgress();
+    void fetchingSuccess(QuestionDetails questionDetails);
 
-    void fetchingDone();
-
-
-    void showDetails();
-
-    void hideDetails();
-
-    void showError();
-
-    void hideErrror();
+    void fetchingFail();
 }

@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.techyourchance.mvc.R;
 import com.techyourchance.mvc.networking.QuestionDetailsResponseSchema;
 import com.techyourchance.mvc.networking.QuestionSchema;
 import com.techyourchance.mvc.networking.StackoverflowApi;
+import com.techyourchance.mvc.questions.QuestionDetails;
 import com.techyourchance.mvc.screens.common.BaseActivity;
 
 import retrofit2.Call;
@@ -43,7 +42,7 @@ public class QuestionDetailsActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        mQuestionDetailsMvc.fetchStarting();
         fetchQuestionDetail();
     }
 
@@ -52,19 +51,21 @@ public class QuestionDetailsActivity extends BaseActivity {
                 .enqueue(new Callback<QuestionDetailsResponseSchema>() {
                     @Override
                     public void onResponse(Call<QuestionDetailsResponseSchema> call, Response<QuestionDetailsResponseSchema> response) {
-                        if (response.isSuccessful()) {
-                            QuestionSchema schema = response.body().getQuestion();
-                            String title = schema.getTitle();
-                            String body = schema.getBody();
+                        if (response.isSuccessful() && response.body() != null) {
 
-                            Log.d(TAG, title);
-                            Log.d(TAG, body);
+                            QuestionSchema schema = response.body().getQuestion();
+
+                            QuestionDetails mQuestionDetails = new QuestionDetails(schema.getId(), schema.getTitle(), schema.getBody());
+                            mQuestionDetailsMvc.fetchingSuccess(mQuestionDetails);
+
+                        } else {
+                            mQuestionDetailsMvc.fetchingFail();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<QuestionDetailsResponseSchema> call, Throwable t) {
-                        Log.e(TAG, "Something is wrong");
+                        mQuestionDetailsMvc.fetchingFail();
                     }
                 });
     }
