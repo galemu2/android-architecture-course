@@ -1,7 +1,6 @@
 package com.techyourchance.mvc.screens.questionslist;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import com.techyourchance.mvc.R;
@@ -19,8 +18,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class QuestionsListActivity extends BaseActivity implements QuestionsListViewMvcImpl.Listener {
 

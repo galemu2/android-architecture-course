@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <ProgressBar
-        android:id="@+id/progress_circular"
+        android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -15,7 +15,7 @@
         android:padding="16dp" />
 
     <LinearLayout
-        android:id="@+id/question_details_container"
+        android:id="@+id/details_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -42,6 +42,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/image_error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@drawable/ic_error_1349562"
