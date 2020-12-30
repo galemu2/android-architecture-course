@@ -8,6 +8,8 @@ import com.techyourchance.mvc.common.Constants;
 import com.techyourchance.mvc.networking.QuestionSchema;
 import com.techyourchance.mvc.networking.QuestionsListResponseSchema;
 import com.techyourchance.mvc.networking.StackoverflowApi;
+import com.techyourchance.mvc.questions.FetchLastActiveQuestionUseCase;
+import com.techyourchance.mvc.questions.FetchQuestionDetailsUseCase;
 import com.techyourchance.mvc.questions.Question;
 import com.techyourchance.mvc.screens.common.BaseActivity;
 import com.techyourchance.mvc.screens.questiondetails.QuestionDetailsActivity;
@@ -19,11 +21,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QuestionsListActivity extends BaseActivity implements QuestionsListViewMvcImpl.Listener {
+public class QuestionsListActivity extends BaseActivity implements QuestionsListViewMvcImpl.Listener, FetchLastActiveQuestionUseCase.Listener {
 
-    private StackoverflowApi mStackoverflowApi;
+
 
     private QuestionsListViewMvc mViewMvc;
+    private FetchLastActiveQuestionUseCase mFetchLastActiveQuestionUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,8 @@ public class QuestionsListActivity extends BaseActivity implements QuestionsList
         mViewMvc = getCompositionRoot().getViewMvcFactory().getQuestionsListViewMvc(null);
         mViewMvc.registerListener(this);
 
-        mStackoverflowApi = getCompositionRoot().getStackoverflowApi();
+        mFetchLastActiveQuestionUseCase = getCompositionRoot().getFetchLastActiveQuestionUseCase();
+
 
         setContentView(mViewMvc.getRootView());
     }
@@ -40,27 +44,19 @@ public class QuestionsListActivity extends BaseActivity implements QuestionsList
     @Override
     protected void onStart() {
         super.onStart();
-        fetchQuestions();
+        mFetchLastActiveQuestionUseCase.registerListener(this);
+        mFetchLastActiveQuestionUseCase.fetchLastActiveQuestionsAndNotify();
+
     }
 
-    private void fetchQuestions() {
-        mStackoverflowApi.fetchLastActiveQuestions(Constants.QUESTIONS_LIST_PAGE_SIZE)
-                .enqueue(new Callback<QuestionsListResponseSchema>() {
-                    @Override
-                    public void onResponse(Call<QuestionsListResponseSchema> call, Response<QuestionsListResponseSchema> response) {
-                        if (response.isSuccessful()) {
-                            bindQuestions(response.body().getQuestions());
-                        } else {
-                            networkCallFailed();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<QuestionsListResponseSchema> call, Throwable t) {
-                        networkCallFailed();
-                    }
-                } );
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mFetchLastActiveQuestionUseCase.unregisterListener(this);
     }
+
+
+
 
     private void bindQuestions(List<QuestionSchema> questionSchemas) {
         List<Question> questions = new ArrayList<>(questionSchemas.size());
@@ -70,12 +66,18 @@ public class QuestionsListActivity extends BaseActivity implements QuestionsList
         mViewMvc.bindQuestions(questions);
     }
 
-    private void networkCallFailed() {
+    @Override
+    public void onQuestionClicked(Question question) {
+        QuestionDetailsActivity.start(this, question.getId());
+    }
+
+    @Override
+    public void onFetchLastActiveQuestionsFailed() {
         Toast.makeText(this, R.string.error_network_call_failed, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onQuestionClicked(Question question) {
-        QuestionDetailsActivity.start(this, question.getId());
+    public void onFetchLastActiveQuestionSuccess(List<QuestionSchema> questions) {
+        bindQuestions(questions);
     }
 }
