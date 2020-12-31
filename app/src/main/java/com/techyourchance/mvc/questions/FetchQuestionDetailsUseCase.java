@@ -29,6 +29,7 @@ public class FetchQuestionDetailsUseCase extends BaseObservableViewMvc<FetchQues
     public void fetchQuestionDetailAndNotify(String questionId) {
         mStackoverflowApi.fetchQuestionDetails(questionId)
                 .enqueue(new Callback<QuestionDetailsResponseSchema>() {
+
                     @Override
                     public void onResponse(Call<QuestionDetailsResponseSchema> call, Response<QuestionDetailsResponseSchema> response) {
                         if (response.isSuccessful() && response.body() != null) {
