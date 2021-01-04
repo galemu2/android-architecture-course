@@ -16,7 +16,11 @@ public class QuestionsListController
 
     private QuestionsListViewMvc mViewMvc;
 
-    public QuestionsListController(FetchLastActiveQuestionUseCase mFetchLastActiveQuestionUseCase, ScreensNavigator mScreensNavigator, MessagesDisplayer mMessagesDisplayer) {
+    public QuestionsListController(
+            FetchLastActiveQuestionUseCase mFetchLastActiveQuestionUseCase,
+            ScreensNavigator mScreensNavigator,
+            MessagesDisplayer mMessagesDisplayer
+    ) {
         this.mFetchLastActiveQuestionUseCase = mFetchLastActiveQuestionUseCase;
         this.mScreensNavigator = mScreensNavigator;
         this.mMessagesDisplayer = mMessagesDisplayer;

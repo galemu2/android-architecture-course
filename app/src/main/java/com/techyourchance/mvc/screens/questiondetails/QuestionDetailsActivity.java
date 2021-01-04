@@ -11,7 +11,7 @@ import com.techyourchance.mvc.questions.QuestionDetails;
 import com.techyourchance.mvc.screens.common.BaseActivity;
 import com.techyourchance.mvc.screens.common.MessagesDisplayer;
 
-public class QuestionDetailsActivity extends BaseActivity implements FetchQuestionDetailsUseCase.Listener {
+public class QuestionDetailsActivity extends BaseActivity {
 
     public static final String EXTRA_QUESTION_ID = "EXTRA_QUESTION_ID";
     private static final String TAG = "TAG";
@@ -22,25 +22,23 @@ public class QuestionDetailsActivity extends BaseActivity implements FetchQuesti
         context.startActivity(intent);
     }
 
-    private QuestionDetailsMvc mQuestionDetailsMvc;
-    private FetchQuestionDetailsUseCase fetchQuestionDetailsUseCase;
-    private MessagesDisplayer mMessagesDisplayer;
+    private QuestionDetailController mQuestionDetailController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMessagesDisplayer = getCompositionRoot().getMessageDisplayer();
-        fetchQuestionDetailsUseCase = getCompositionRoot().getFetchQuestionDetailsUseCase();
-        mQuestionDetailsMvc = getCompositionRoot().getViewMvcFactory().getQuestionDetailsMvc(null);
+
+        QuestionDetailsMvc mQuestionDetailsMvc = getCompositionRoot().getViewMvcFactory().getQuestionDetailsMvc(null);
+        mQuestionDetailController = getCompositionRoot().getQuestionDetailController();
+        mQuestionDetailController.bind(mQuestionDetailsMvc);
+
         setContentView(mQuestionDetailsMvc.getRootView());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        fetchQuestionDetailsUseCase.registerListener(this);
-        mQuestionDetailsMvc.fetchStarting();
-        fetchQuestionDetailsUseCase.fetchQuestionDetailAndNotify(getQuestionId());
+        mQuestionDetailController.onStart();
     }
 
     private String getQuestionId() {
@@ -50,23 +48,6 @@ public class QuestionDetailsActivity extends BaseActivity implements FetchQuesti
     @Override
     protected void onStop() {
         super.onStop();
-        fetchQuestionDetailsUseCase.unregisterListener(this);
-    }
-
-    private void bindQuestionDetails(QuestionDetails questionDetails) {
-        mQuestionDetailsMvc.fetchingSuccess();
-        mQuestionDetailsMvc.bindQuestionDetails(questionDetails);
-    }
-
-    @Override
-    public void onQuestionDetailsFetched(QuestionDetails questionDetails) {
-        bindQuestionDetails(questionDetails);
-    }
-
-    @Override
-    public void onQuestionDetailsFetchFailed() {
-        mQuestionDetailsMvc.fetchingFail();
-        mMessagesDisplayer.showUseCaseError();
-
+        mQuestionDetailController.onStop();
     }
 }
