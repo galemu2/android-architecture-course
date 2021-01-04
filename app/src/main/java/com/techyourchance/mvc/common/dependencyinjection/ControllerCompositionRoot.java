@@ -1,12 +1,16 @@
 package com.techyourchance.mvc.common.dependencyinjection;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 
 import com.techyourchance.mvc.networking.StackoverflowApi;
 import com.techyourchance.mvc.questions.FetchLastActiveQuestionUseCase;
 import com.techyourchance.mvc.questions.FetchQuestionDetailsUseCase;
+import com.techyourchance.mvc.screens.common.MessagesDisplayer;
+import com.techyourchance.mvc.screens.common.ScreensNavigator;
 import com.techyourchance.mvc.screens.common.ViewMvcFactory;
+import com.techyourchance.mvc.screens.questionslist.QuestionsListController;
 
 public class ControllerCompositionRoot {
 
@@ -36,5 +40,20 @@ public class ControllerCompositionRoot {
 
     public FetchLastActiveQuestionUseCase getFetchLastActiveQuestionUseCase() {
         return new FetchLastActiveQuestionUseCase(getStackoverflowApi());
+    }
+
+    public QuestionsListController getQuestionsListController() {
+        return new QuestionsListController(getFetchLastActiveQuestionUseCase(), getScreenNavigator(), getMessageDisplayer());
+    }
+
+    private ScreensNavigator getScreenNavigator() {
+        return new ScreensNavigator(getContext());
+    }
+
+    public MessagesDisplayer getMessageDisplayer(){
+        return new MessagesDisplayer(getContext());
+    }
+    private Context getContext() {
+        return mActivity;
     }
 }

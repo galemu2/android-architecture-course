@@ -6,6 +6,7 @@ import com.techyourchance.mvc.networking.QuestionsListResponseSchema;
 import com.techyourchance.mvc.networking.StackoverflowApi;
 import com.techyourchance.mvc.screens.common.BaseObservableViewMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -17,7 +18,7 @@ public class FetchLastActiveQuestionUseCase extends BaseObservableViewMvc<FetchL
     public interface Listener {
         void onFetchLastActiveQuestionsFailed();
 
-        void onFetchLastActiveQuestionSuccess(List<QuestionSchema> questions);
+        void onFetchLastActiveQuestionSuccess(List<Question> questions);
     }
 
     private final StackoverflowApi stackoverflowApi;
@@ -55,10 +56,21 @@ public class FetchLastActiveQuestionUseCase extends BaseObservableViewMvc<FetchL
         }
     }
 
-    private void notifySuccess(List<QuestionSchema> questions) {
+    private void notifySuccess(List<QuestionSchema> questionSchemas) {
+
+        List<Question> questions = getQuestions(questionSchemas);
+
         for(Listener listener:getListeners()){
             listener.onFetchLastActiveQuestionSuccess(questions);
         }
+    }
+
+    private List<Question> getQuestions(List<QuestionSchema> questionSchemas) {
+        List<Question> questions = new ArrayList<>(questionSchemas.size());
+        for (QuestionSchema questionSchema : questionSchemas) {
+            questions.add(new Question(questionSchema.getId(), questionSchema.getTitle()));
+        }
+        return questions;
     }
 
 }

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.techyourchance.mvc.questions.FetchQuestionDetailsUseCase;
 import com.techyourchance.mvc.questions.QuestionDetails;
 import com.techyourchance.mvc.screens.common.BaseActivity;
+import com.techyourchance.mvc.screens.common.MessagesDisplayer;
 
 public class QuestionDetailsActivity extends BaseActivity implements FetchQuestionDetailsUseCase.Listener {
 
@@ -23,10 +24,12 @@ public class QuestionDetailsActivity extends BaseActivity implements FetchQuesti
 
     private QuestionDetailsMvc mQuestionDetailsMvc;
     private FetchQuestionDetailsUseCase fetchQuestionDetailsUseCase;
+    private MessagesDisplayer mMessagesDisplayer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMessagesDisplayer = getCompositionRoot().getMessageDisplayer();
         fetchQuestionDetailsUseCase = getCompositionRoot().getFetchQuestionDetailsUseCase();
         mQuestionDetailsMvc = getCompositionRoot().getViewMvcFactory().getQuestionDetailsMvc(null);
         setContentView(mQuestionDetailsMvc.getRootView());
@@ -63,6 +66,7 @@ public class QuestionDetailsActivity extends BaseActivity implements FetchQuesti
     @Override
     public void onQuestionDetailsFetchFailed() {
         mQuestionDetailsMvc.fetchingFail();
-        Toast.makeText(this, "network call fail", Toast.LENGTH_SHORT).show();
+        mMessagesDisplayer.showUseCaseError();
+
     }
 }

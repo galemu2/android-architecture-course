@@ -21,63 +21,35 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QuestionsListActivity extends BaseActivity implements QuestionsListViewMvcImpl.Listener, FetchLastActiveQuestionUseCase.Listener {
+public class QuestionsListActivity extends BaseActivity {
 
 
-
-    private QuestionsListViewMvc mViewMvc;
-    private FetchLastActiveQuestionUseCase mFetchLastActiveQuestionUseCase;
+     private QuestionsListController mQuestionsListController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mViewMvc = getCompositionRoot().getViewMvcFactory().getQuestionsListViewMvc(null);
-        mViewMvc.registerListener(this);
-
-        mFetchLastActiveQuestionUseCase = getCompositionRoot().getFetchLastActiveQuestionUseCase();
+        QuestionsListViewMvc mViewMvc = getCompositionRoot().getViewMvcFactory().getQuestionsListViewMvc(null);
 
 
+        mQuestionsListController = getCompositionRoot().getQuestionsListController();
+        mQuestionsListController.bindView(mViewMvc);
         setContentView(mViewMvc.getRootView());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mFetchLastActiveQuestionUseCase.registerListener(this);
-        mFetchLastActiveQuestionUseCase.fetchLastActiveQuestionsAndNotify();
+        mQuestionsListController.onStart();
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mFetchLastActiveQuestionUseCase.unregisterListener(this);
+        mQuestionsListController.onStop();
     }
 
 
-
-
-    private void bindQuestions(List<QuestionSchema> questionSchemas) {
-        List<Question> questions = new ArrayList<>(questionSchemas.size());
-        for (QuestionSchema questionSchema : questionSchemas) {
-            questions.add(new Question(questionSchema.getId(), questionSchema.getTitle()));
-        }
-        mViewMvc.bindQuestions(questions);
-    }
-
-    @Override
-    public void onQuestionClicked(Question question) {
-        QuestionDetailsActivity.start(this, question.getId());
-    }
-
-    @Override
-    public void onFetchLastActiveQuestionsFailed() {
-        Toast.makeText(this, R.string.error_network_call_failed, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onFetchLastActiveQuestionSuccess(List<QuestionSchema> questions) {
-        bindQuestions(questions);
-    }
 }
