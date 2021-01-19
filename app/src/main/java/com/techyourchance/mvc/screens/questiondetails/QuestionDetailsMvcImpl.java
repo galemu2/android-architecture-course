@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.techyourchance.mvc.R;
 import com.techyourchance.mvc.questions.QuestionDetails;
-import com.techyourchance.mvc.screens.common.BaseViewMvc;
+import com.techyourchance.mvc.screens.common.views.BaseViewMvc;
 
 public class QuestionDetailsMvcImpl extends BaseViewMvc implements QuestionDetailsMvc {
 

@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 
 import com.techyourchance.mvc.screens.questiondetails.QuestionDetailsMvc;
 import com.techyourchance.mvc.screens.questiondetails.QuestionDetailsMvcImpl;
-import com.techyourchance.mvc.screens.questionslist.QuestionsListItemViewMvc;
-import com.techyourchance.mvc.screens.questionslist.QuestionsListItemViewMvcImpl;
 import com.techyourchance.mvc.screens.questionslist.QuestionsListViewMvc;
 import com.techyourchance.mvc.screens.questionslist.QuestionsListViewMvcImpl;
+import com.techyourchance.mvc.screens.questionslist.questionslistitem.QuestionsListItemViewMvc;
+import com.techyourchance.mvc.screens.questionslist.questionslistitem.QuestionsListItemViewMvcImpl;
 
 public class ViewMvcFactory {
 

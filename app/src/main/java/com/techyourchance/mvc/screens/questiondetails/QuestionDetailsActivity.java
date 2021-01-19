@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
-import com.techyourchance.mvc.questions.FetchQuestionDetailsUseCase;
-import com.techyourchance.mvc.questions.QuestionDetails;
-import com.techyourchance.mvc.screens.common.BaseActivity;
-import com.techyourchance.mvc.screens.common.MessagesDisplayer;
+import com.techyourchance.mvc.screens.common.controllers.BaseActivity;
 
 public class QuestionDetailsActivity extends BaseActivity {
 
@@ -22,15 +18,15 @@ public class QuestionDetailsActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    private QuestionDetailController mQuestionDetailController;
+    private QuestionDetailsController mQuestionDetailsController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         QuestionDetailsMvc mQuestionDetailsMvc = getCompositionRoot().getViewMvcFactory().getQuestionDetailsMvc(null);
-        mQuestionDetailController = getCompositionRoot().getQuestionDetailController();
-        mQuestionDetailController.bind(mQuestionDetailsMvc);
+        mQuestionDetailsController = getCompositionRoot().getQuestionDetailController();
+        mQuestionDetailsController.bind(mQuestionDetailsMvc);
 
         setContentView(mQuestionDetailsMvc.getRootView());
     }
@@ -38,16 +34,12 @@ public class QuestionDetailsActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mQuestionDetailController.onStart();
-    }
-
-    private String getQuestionId() {
-        return getIntent().getStringExtra(EXTRA_QUESTION_ID);
+        mQuestionDetailsController.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mQuestionDetailController.onStop();
+        mQuestionDetailsController.onStop();
     }
 }

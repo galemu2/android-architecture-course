@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import com.techyourchance.mvc.R;
 import com.techyourchance.mvc.questions.Question;
-import com.techyourchance.mvc.screens.common.BaseObservableViewMvc;
 import com.techyourchance.mvc.screens.common.ViewMvcFactory;
+import com.techyourchance.mvc.screens.common.views.BaseObservableViewMvc;
 
 import java.util.List;
 

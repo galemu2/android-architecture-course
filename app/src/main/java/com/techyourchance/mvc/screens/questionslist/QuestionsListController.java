@@ -2,8 +2,8 @@ package com.techyourchance.mvc.screens.questionslist;
 
 import com.techyourchance.mvc.questions.FetchLastActiveQuestionUseCase;
 import com.techyourchance.mvc.questions.Question;
-import com.techyourchance.mvc.screens.common.MessagesDisplayer;
-import com.techyourchance.mvc.screens.common.ScreensNavigator;
+import com.techyourchance.mvc.screens.common.screensnavigator.ScreensNavigator;
+import com.techyourchance.mvc.screens.common.toastshelper.ToastHelper;
 
 import java.util.List;
 
@@ -12,33 +12,34 @@ public class QuestionsListController
 
     private final FetchLastActiveQuestionUseCase mFetchLastActiveQuestionUseCase;
     private final ScreensNavigator mScreensNavigator;
-    private final MessagesDisplayer mMessagesDisplayer;
+    private final ToastHelper mToastHelper;
 
     private QuestionsListViewMvc mViewMvc;
 
     public QuestionsListController(
             FetchLastActiveQuestionUseCase mFetchLastActiveQuestionUseCase,
             ScreensNavigator mScreensNavigator,
-            MessagesDisplayer mMessagesDisplayer
+            ToastHelper mToastHelper
     ) {
         this.mFetchLastActiveQuestionUseCase = mFetchLastActiveQuestionUseCase;
         this.mScreensNavigator = mScreensNavigator;
-        this.mMessagesDisplayer = mMessagesDisplayer;
+        this.mToastHelper = mToastHelper;
     }
 
     public void bindView(QuestionsListViewMvc viewMvc) {
         this.mViewMvc = viewMvc;
-        this.mViewMvc.registerListener(this);
+
     }
 
     public void onStart() {
         mFetchLastActiveQuestionUseCase.registerListener(this);
+        mViewMvc.registerListener(this);
         mFetchLastActiveQuestionUseCase.fetchLastActiveQuestionsAndNotify();
     }
 
     public void onStop() {
+        mViewMvc.unregisterListener(this);
         mFetchLastActiveQuestionUseCase.unregisterListener(this);
-
     }
 
     @Override
@@ -48,7 +49,7 @@ public class QuestionsListController
 
     @Override
     public void onFetchLastActiveQuestionsFailed() {
-        mMessagesDisplayer.showUseCaseError();
+        mToastHelper.showUseCaseError();
     }
 
     @Override

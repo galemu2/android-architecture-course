@@ -1,14 +1,14 @@
-package com.techyourchance.mvc.screens.common;
+package com.techyourchance.mvc.screens.common.toastshelper;
 
 import android.content.Context;
 import android.widget.Toast;
 
 import com.techyourchance.mvc.R;
 
-public class MessagesDisplayer {
+public class ToastHelper {
     private final Context mContext;
 
-    public MessagesDisplayer(Context mContext) {
+    public ToastHelper(Context mContext) {
         this.mContext = mContext;
     }
 

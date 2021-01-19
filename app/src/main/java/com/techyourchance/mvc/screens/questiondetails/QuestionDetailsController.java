@@ -2,22 +2,22 @@ package com.techyourchance.mvc.screens.questiondetails;
 
 import com.techyourchance.mvc.questions.FetchQuestionDetailsUseCase;
 import com.techyourchance.mvc.questions.QuestionDetails;
-import com.techyourchance.mvc.screens.common.MessagesDisplayer;
+import com.techyourchance.mvc.screens.common.toastshelper.ToastHelper;
 
-public class QuestionDetailController implements FetchQuestionDetailsUseCase.Listener {
+public class QuestionDetailsController implements FetchQuestionDetailsUseCase.Listener {
 
     private final FetchQuestionDetailsUseCase fetchQuestionDetailsUseCase;
-    private final QuestionIdentifyer questionIdentifyer;
+    private final QuestionIdentifier questionIdentifier;
     private QuestionDetailsMvc mQuestionDetailsMvc;
-    private final MessagesDisplayer mMessagesDisplayer;
+    private final ToastHelper mToastHelper;
 
-    public QuestionDetailController(
+    public QuestionDetailsController(
             FetchQuestionDetailsUseCase fetchQuestionDetailsUseCase,
-            MessagesDisplayer mMessagesDisplayer,
-            QuestionIdentifyer questionIdentifyer) {
+            ToastHelper mToastHelper,
+            QuestionIdentifier questionIdentifier) {
         this.fetchQuestionDetailsUseCase = fetchQuestionDetailsUseCase;
-        this.mMessagesDisplayer = mMessagesDisplayer;
-        this.questionIdentifyer = questionIdentifyer;
+        this.mToastHelper = mToastHelper;
+        this.questionIdentifier = questionIdentifier;
     }
 
     public void bind(QuestionDetailsMvc mQuestionDetailsMvc) {
@@ -38,14 +38,14 @@ public class QuestionDetailController implements FetchQuestionDetailsUseCase.Lis
     public void onQuestionDetailsFetchFailed() {
         mQuestionDetailsMvc.fetchingFail();
 
-        mMessagesDisplayer.showUseCaseError();
+        mToastHelper.showUseCaseError();
 
     }
 
     public void onStart() {
         fetchQuestionDetailsUseCase.registerListener(this);
         mQuestionDetailsMvc.fetchStarting();
-        fetchQuestionDetailsUseCase.fetchQuestionDetailAndNotify(questionIdentifyer.getQuestionId());
+        fetchQuestionDetailsUseCase.fetchQuestionDetailAndNotify(questionIdentifier.getQuestionId());
     }
 
     public void onStop() {

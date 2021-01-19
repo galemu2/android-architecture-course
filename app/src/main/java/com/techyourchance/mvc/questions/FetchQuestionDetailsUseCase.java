@@ -1,11 +1,9 @@
 package com.techyourchance.mvc.questions;
 
-import android.widget.Toast;
-
-import com.techyourchance.mvc.networking.QuestionDetailsResponseSchema;
-import com.techyourchance.mvc.networking.QuestionSchema;
 import com.techyourchance.mvc.networking.StackoverflowApi;
-import com.techyourchance.mvc.screens.common.BaseObservableViewMvc;
+import com.techyourchance.mvc.networking.questions.QuestionDetailsResponseSchema;
+import com.techyourchance.mvc.networking.questions.QuestionSchema;
+import com.techyourchance.mvc.screens.common.views.BaseObservableViewMvc;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,7 +14,6 @@ public class FetchQuestionDetailsUseCase extends BaseObservableViewMvc<FetchQues
 
     public interface Listener {
         void onQuestionDetailsFetched(QuestionDetails questionDetails);
-
         void onQuestionDetailsFetchFailed();
     }
 
